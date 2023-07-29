@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import { Buffer } from 'buffer'
 
-function App() {
+const App = () => {
+  const [blogs,setblog] =useState([])
+
+   
+  useEffect(()=>{
+    fetch('http://localhost:4000/getInfo')
+    .then(res =>res.json())
+    .then(data =>setblog(data) )
+  },[])
+
+  // console.log(blogs)
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+     <div>My Blog List</div>
+      <div>
+      {
+              blogs.length === 0 ? <h1>Loading</h1> :  (
+                blogs.map((blog,ind)=>{
+
+                
+                
+                   return(
+                    <div key={ind}>
+                      <h1>{blog.title}</h1>
+                      <p>{blog.excerpt}</p>
+                      <img
+                  src={`data:${blog.img.contentType};base64,${Buffer.from(
+                    blog.img.data
+                  ).toString('base64')}`}
+                  alt='Img'
+                  width={'500px'}
+                />
+                    </div>
+
+                   ) 
+                })
+              )
+            }
+      </div>
+            
+    
+     
+    </>
+   
+  )
 }
 
 export default App;
